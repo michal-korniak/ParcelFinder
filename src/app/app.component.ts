@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
-import { EMPTY, finalize, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, finalize, of, switchMap, tap } from 'rxjs';
 import { County } from '../models/county.model';
 import { Municipality } from '../models/municipality.model';
 import { Region } from '../models/region.model';
@@ -87,7 +87,12 @@ export class AppComponent implements OnInit {
         return this.geoportalService.getRegionsById(municipalityId);
       }),
       tap(result => this.availableRegions = result),
-      tap(() => this.isLoading = false)
+      tap(() => this.isLoading = false),
+      catchError(error => {
+        this.isLoading = false;
+        this.form.get('municipality').setErrors({ cannotFindRegions: true });
+        return of(error);
+      })
     ).subscribe();
 
     this.form.get('region').valueChanges.pipe(
@@ -120,7 +125,12 @@ export class AppComponent implements OnInit {
     this.isLoading = true;
     this.geoportalService.getParcelById(id).pipe(
       tap(result => this.parcel = result),
-      tap(() => this.isLoading = false)
+      tap(() => this.isLoading = false),
+      catchError(error => {
+        this.isLoading = false;
+        this.form.get('number').setErrors({ parcelNotFound: true });
+        return of(error);
+      })
     ).subscribe();
   }
 
