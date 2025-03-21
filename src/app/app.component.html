@@ -40,23 +40,25 @@
       <p-button class="d-flex justify-content-center" type="submit">Wyszukaj</p-button>
     </form>
   </div>
-  <div *ngIf="parcel!=null" class="d-flex justify-content-center">
-    <div class="card mt-5 p-3 output d-flex justify-content-center">
-      <h5 class="card-title">Informacje o działce</h5>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Numer:</strong> {{ parcel.ParcelNumber }}</li>
-        <li class="list-group-item"><strong>Pełny Number:</strong> {{ parcel.Id }}</li>
-        <li class="list-group-item">
-          <strong>Google Maps: </strong>
-          <a [href]="parcel.GoogleMapsLink" target="_blank">Link</a>
-        </li>
-        <li class="list-group-item">
-          <strong>Geoportal: </strong>
-          <a [href]="parcel.GeoportalLink" target="_blank">Link</a>
-        </li>
-      </ul>
+  <ng-container *ngFor="let parcel of parcels">
+    <div *ngIf="parcel!=null" class="d-flex justify-content-center">
+      <div class="card mt-5 p-3 output d-flex justify-content-center">
+        <h5 class="card-title">Informacje o działce</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Numer:</strong> {{ parcel.ParcelNumber }}</li>
+          <li class="list-group-item"><strong>Pełny Number:</strong> {{ parcel.Id }}</li>
+          <li class="list-group-item">
+            <strong>Google Maps: </strong>
+            <a [href]="parcel.GoogleMapsLink" target="_blank">Link</a>
+          </li>
+          <li class="list-group-item">
+            <strong>Geoportal: </strong>
+            <a [href]="parcel.GeoportalLink" target="_blank">Link</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </ng-container>
 
 
 </div>

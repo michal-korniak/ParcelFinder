@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
   availableRegions: Region[] = [];
   form: FormGroup;
 
-  parcel: Parcel;
+  parcels: Parcel[];
   isLoading: boolean = false;
 
 
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
         this.form.get('municipality').reset();
         this.form.get('region').reset();
         this.form.get('number').reset();
-        this.parcel = null;
+        this.parcels = null;
       })).subscribe();
 
     this.form.get('county').valueChanges.pipe(
@@ -68,14 +68,14 @@ export class AppComponent implements OnInit {
         this.form.get('municipality').reset();
         this.form.get('region').reset();
         this.form.get('number').reset();
-        this.parcel = null;
+        this.parcels = null;
       })).subscribe();
 
     this.form.get('municipality').valueChanges.pipe(
       tap(selectedMunicipality => {
         this.form.get('region').reset();
         this.form.get('number').reset();
-        this.parcel = null;
+        this.parcels = null;
       }),
       switchMap(selectedMunicipality => {
         if (!selectedMunicipality) {
@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
     this.form.get('region').valueChanges.pipe(
       tap(_ => {
         this.form.get('number').reset();
-        this.parcel = null;
+        this.parcels = null;
       })).subscribe();
   }
 
@@ -120,11 +120,16 @@ export class AppComponent implements OnInit {
 
   onSubmit() {
     const searchFormValue = this.form.value as SearchForm;
-    const id = `${searchFormValue.region.code}.${searchFormValue.number}`;
+    let id;
+    if (this.isFullIdentifier(searchFormValue.number)) {
+      id = searchFormValue.number;
+    } else {
+      id = `${searchFormValue.region.code}.${searchFormValue.number}`;
+    }
 
     this.isLoading = true;
     this.geoportalService.getParcelById(id).pipe(
-      tap(result => this.parcel = result),
+      tap(result => this.parcels = result),
       tap(() => this.isLoading = false),
       catchError(error => {
         this.isLoading = false;
@@ -132,6 +137,10 @@ export class AppComponent implements OnInit {
         return of(error);
       })
     ).subscribe();
+  }
+
+  isFullIdentifier(value: string): boolean {
+    return /^\d+_\d.*$/.test(value);
   }
 
 }
