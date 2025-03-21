@@ -123,8 +123,10 @@ export class AppComponent implements OnInit {
     let id;
     if (this.isFullIdentifier(searchFormValue.number)) {
       id = searchFormValue.number;
-    } else {
+    } else if (searchFormValue.region?.code != null) {
       id = `${searchFormValue.region.code}.${searchFormValue.number}`;
+    } else {
+      this.form.get('number').setErrors({ notEnoughData: true });
     }
 
     this.isLoading = true;
