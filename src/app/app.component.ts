@@ -86,6 +86,7 @@ export class AppComponent implements OnInit {
         const municipalityId = `${searchFormValue.voivodeship.code}${searchFormValue.county.code}${selectedMunicipality.code}_${selectedMunicipality.type}`;
         return this.geoportalService.getRegionsById(municipalityId);
       }),
+      tap(result => console.log(result)),
       tap(result => this.availableRegions = result),
       tap(() => this.isLoading = false),
       catchError(error => {
