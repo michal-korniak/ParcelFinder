@@ -1,25 +1,26 @@
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
-import { catchError, EMPTY, finalize, of, switchMap, tap } from 'rxjs';
+import { InputTextModule } from 'primeng/inputtext';
+import { catchError, EMPTY, of, switchMap, tap } from 'rxjs';
 import { County } from '../models/county.model';
 import { Municipality } from '../models/municipality.model';
+import { Parcel } from '../models/parcel.model';
 import { Region } from '../models/region.model';
+import { SearchForm } from '../models/search-form.model';
 import { Voivodeship } from '../models/voivodeship.model';
+import { OrderByPipe } from '../pipes/order-by.pipe';
 import { GeoportalService } from '../services/geoportal.service';
 import { TerytService } from '../services/teryt.service';
-import { SearchForm } from '../models/search-form.model';
-import { OrderByPipe } from '../pipes/order-by.pipe';
-import { InputTextModule } from 'primeng/inputtext';
-import { Parcel } from '../models/parcel.model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [CommonModule, ButtonModule, DropdownModule, InputTextModule, FormsModule, ReactiveFormsModule, OrderByPipe]
+  imports: [CommonModule, ButtonModule, DropdownModule, InputTextModule, FormsModule, ReactiveFormsModule, OrderByPipe, ClipboardModule]
 })
 export class AppComponent implements OnInit {
   availableVoivodeships: Voivodeship[] = [];
@@ -32,7 +33,10 @@ export class AppComponent implements OnInit {
   isLoading: boolean = false;
 
 
-  constructor(private terytService: TerytService, private geoportalService: GeoportalService, private formBuilder: FormBuilder) {
+  constructor(private terytService: TerytService,
+    private geoportalService: GeoportalService,
+    private formBuilder: FormBuilder,
+    private clipboard: Clipboard) {
   }
 
   ngOnInit(): void {
@@ -41,6 +45,13 @@ export class AppComponent implements OnInit {
     ).subscribe();
 
     this.initForm();
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const queryParamsId = queryParams.get('id');
+    if (queryParamsId != null) {
+      this.form.get("number").patchValue(queryParamsId);
+      this.onSubmit();
+    }
   }
 
   initForm() {
@@ -119,6 +130,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  onCopyLink(parcel: Parcel) {
+    const baseUrl = window.location.origin;
+    const url = `${baseUrl}?id=${parcel.Id}`;
+    this.clipboard.copy(url);
+    window.history.pushState({}, '', url);
+  }
+
   onSubmit() {
     const searchFormValue = this.form.value as SearchForm;
     let id;
@@ -145,5 +163,4 @@ export class AppComponent implements OnInit {
   isFullIdentifier(value: string): boolean {
     return /^\d+_\d.*$/.test(value);
   }
-
 }

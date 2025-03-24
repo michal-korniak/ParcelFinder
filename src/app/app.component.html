@@ -42,7 +42,7 @@
   </div>
   <ng-container *ngFor="let parcel of parcels">
     <div *ngIf="parcel!=null" class="d-flex justify-content-center">
-      <div class="card mt-5 p-3 output d-flex justify-content-center">
+      <div class="card mt-5 p-3 output d-flex justify-content-center pb-0">
         <h5 class="card-title">Informacje o działce</h5>
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><strong>Numer:</strong> {{ parcel.ParcelNumber }}</li>
@@ -56,6 +56,9 @@
             <a [href]="parcel.GeoportalLink" target="_blank">Link</a>
           </li>
         </ul>
+        <div class="d-flex justify-content-center mt-2 mb-2">
+          <button href="#" class="btn btn-dark" (click)="onCopyLink(parcel)">Skopiuj link</button>
+        </div>
       </div>
     </div>
   </ng-container>
