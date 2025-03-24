@@ -131,10 +131,12 @@ export class AppComponent implements OnInit {
   }
 
   onCopyLink(parcel: Parcel) {
-    const baseUrl = window.location.origin;
-    const url = `${baseUrl}?id=${parcel.Id}`;
-    this.clipboard.copy(url);
-    window.history.pushState({}, '', url);
+    const url = new URL(window.location.href);
+    url.searchParams.set('id', parcel.Id);
+    const urlString = url.toString();
+
+    this.clipboard.copy(urlString);
+    window.history.pushState({}, '', urlString);
   }
 
   onSubmit() {
