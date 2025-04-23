@@ -122,13 +122,13 @@ export class GeoportalService {
     proj4.default.defs("EPSG:4326", "+proj=longlat +datum=WGS84 +no_defs +type=crs");
 
     const convertedCoord = proj4.default("EPSG:2180", "EPSG:4326", sourceCoord);
-    const googleMapsLink = `https://www.google.com/maps?q=${convertedCoord[1]},${convertedCoord[0]}`;
 
     return {
       Id: parcelId,
       ParcelNumber: parcelNumber,
       GoogleMapsLink: `https://www.google.com/maps?q=${convertedCoord[1]},${convertedCoord[0]}`,
-      GeoportalLink: `https://mapy.geoportal.gov.pl/imap/Imgp_2.html?identifyParcel=${parcelId}`
+      GeoportalLink: `https://mapy.geoportal.gov.pl/imap/Imgp_2.html?identifyParcel=${parcelId}`,
+      ShademapLink: `https://shademap.app/@${convertedCoord[1]},${convertedCoord[0]},18z,1745393583002t,0b,0p,0m`
     } as Parcel;
   }
 }

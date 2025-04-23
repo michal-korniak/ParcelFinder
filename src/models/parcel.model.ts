@@ -3,4 +3,5 @@ export interface Parcel {
     ParcelNumber: string;
     GoogleMapsLink: string;
     GeoportalLink: string;
+    ShademapLink: string;
 }
