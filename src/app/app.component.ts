@@ -109,7 +109,6 @@ export class AppComponent implements OnInit {
 
     this.form.get('region').valueChanges.pipe(
       tap(_ => {
-        this.form.get('number').reset();
         this.parcels = null;
       })).subscribe();
   }
