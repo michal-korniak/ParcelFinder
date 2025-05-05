@@ -69,7 +69,6 @@ export class AppComponent implements OnInit {
         this.form.get('county').reset();
         this.form.get('municipality').reset();
         this.form.get('region').reset();
-        this.form.get('number').reset();
         this.parcels = null;
       })).subscribe();
 
@@ -78,14 +77,12 @@ export class AppComponent implements OnInit {
         this.loadMunicipalities(selectedCounty);
         this.form.get('municipality').reset();
         this.form.get('region').reset();
-        this.form.get('number').reset();
         this.parcels = null;
       })).subscribe();
 
     this.form.get('municipality').valueChanges.pipe(
       tap(selectedMunicipality => {
         this.form.get('region').reset();
-        this.form.get('number').reset();
         this.parcels = null;
       }),
       switchMap(selectedMunicipality => {
